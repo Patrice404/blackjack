@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "livraison/src/blackjack/lib/cartes-0.1.jar"
+    ]
+}
