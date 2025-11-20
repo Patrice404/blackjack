@@ -42,11 +42,6 @@ public class Acteur extends AbstractModeleEcoutable {
         this.fireChangement();
     }
 
-    // lance le tour du joueur selon sa stratégie de jeu
-    public Action jouerTour(Acteur joueur, List<Acteur> acteurs) {
-        return this.strategie.play(this, acteurs);
-    }
-
     @Override
     public String toString() {
         return this.nom;
@@ -107,6 +102,10 @@ public class Acteur extends AbstractModeleEcoutable {
     public void setScore(int score) {
         this.score = score;
         this.fireChangement();
+    }
+
+    public Action play(Croupier croupier){
+        return this.strategie.play(this,croupier);
     }
 
 }

@@ -11,7 +11,7 @@ public class JoueurIA implements Strategy {
 
   
     @Override
-    public Action play(Joueur joueur, Croupier croupier) {
+    public Action play(Acteur joueur, Croupier croupier) {
 
         if (croupier == null) {
             // Par sécurité : stratégie simplifiée

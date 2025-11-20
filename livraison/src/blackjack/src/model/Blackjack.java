@@ -30,10 +30,13 @@ public class Blackjack {
     }
 
     public void run(BlackjackGUI gui) {
-        // --- Distribution déjà faite avant ---
-        List<Acteur> acteurs = new ArrayList<>(this.joueurs);
-        // ajouter
+        try {
+            this.initialisation();
+        } catch (BJException e) {
+            e.printStackTrace();
+        }
 
+       
         for (Joueur joueur : joueurs) {
             if (joueur.detientBlackjack()) {
                 continue;
@@ -59,7 +62,7 @@ public class Blackjack {
 
                 } else {
                     // --- Sinon IA ---
-                    action = joueur.getStrategy().play(joueur, acteurs);
+                    action = joueur.play(this.croupier);
                 }
 
                 // --- Traitement de l’action ---
@@ -100,12 +103,12 @@ public class Blackjack {
                 }
             }
         }
-
+        //Si un joueur a buster
+         
         // --- Tour du croupier ---
-        Acteur croupier = getCroupier();
         boolean fin = false;
         while (!fin && !croupier.detientBust()) {
-            Action act = this.croupier.jouerTour(croupier, acteurs);
+            Action act = this.croupier.play(this.croupier);
             if (act == Action.DEMANDER_UNE_CARTE) {
                 this.croupier.choisirUneCarte();
                 ;
@@ -126,16 +129,7 @@ public class Blackjack {
     }
 
     public void calculerResultats(BlackjackGUI gui) {
-        int valeurCroupier = croupier.getScore();
-        if (valeurCroupier > UnchangeableSettings.NB_SCORE_MAX_CROUPIER
-                && valeurCroupier < UnchangeableSettings.NB_SCORE_MAX_PLAYERS) {
-            for (Joueur joueur : joueurs) {
-                if (joueur.getScore() < valeurCroupier) {
-                    this.run(gui);
-                    return;
-                }
-            }
-        }
+        int valeurCroupier = croupier.getScore();        
 
         for (Joueur joueur : joueurs) {
 
@@ -212,9 +206,12 @@ public class Blackjack {
         this.ramasserCarte();
         // partage des cartes
         for (Joueur joueur : this.joueurs) {
-            this.croupier.donnerCarte(joueur, 2);
+            this.croupier.donnerCarte(joueur, 1);
         }
         this.croupier.choisirUneCarte();
+        for (Joueur joueur : this.joueurs) {
+            this.croupier.donnerCarte(joueur, 1);
+        }
 
     }
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<reglagesBJ> 
+    <nbHumainsPlayers>0</nbHumainsPlayers> 
+    <nbIaPlayers>0</nbIaPlayers> 
+    <nbScoreMaxPlayer>21</nbScoreMaxPlayer>
+    <nbScoreMaxCroupier>17</nbScoreMaxCroupier>
+</reglagesBJ>

@@ -9,7 +9,7 @@ public class Humain implements Strategy {
     Scanner scanner = new Scanner(System.in);
 
     @Override
-    public Action play(Joueur joueur, Croupier croupier) {
+    public Action play(Acteur joueur, Croupier croupier) {
         return null;
     }
     @Override
