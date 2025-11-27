@@ -108,4 +108,6 @@ public class Acteur extends AbstractModeleEcoutable {
         return this.strategie.play(this,croupier);
     }
 
+    
+
 }

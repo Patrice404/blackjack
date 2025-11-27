@@ -30,6 +30,7 @@ public class Blackjack {
     }
 
     public void run(BlackjackGUI gui) {
+        boolean croupierMustPlay = true;
         try {
             this.initialisation();
         } catch (BJException e) {
@@ -43,7 +44,7 @@ public class Blackjack {
             }
 
             boolean termine = false;
-            while (!termine && !joueur.detientBust()) {
+            while (!termine && !joueur.detientBust() && !joueur.getAbandon()) {
 
                 Action action = null;
 
@@ -71,15 +72,31 @@ public class Blackjack {
                         try {
                             this.croupier.donnerCarte(joueur, 1);
                         } catch (BJException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+                            System.out.println("Pas assez de carte de disponible");
+                            return;
+                        }
+                        // Si le joueur a busté et qu'il est le seul joueur encore en jeu, le croupier n'a pas besoin de jouer
+                        if(joueur.detientBust() && this.joueurs.size()==1){
+                            croupierMustPlay = false;    
                         }
                         break;
                     case NE_RIEN_FAIRE:
                         termine = true;
                         break;
                     case ABANDONNER:
-                        //joueur.gagnerMise(0.5f);
+                        if(joueur.getNbCarte()==2){
+                            joueur.gagnerMise(0.5f);
+                            joueur.setAbandon(true);
+                            new VueInfo(gui, joueur.getNom() + " a abandonné.");
+                            System.out.println("Abandon");
+
+                            if(this.joueurs.size()==1){
+                                croupierMustPlay = false;
+                            }
+                        }else{
+                            new VueInfo(gui,"Vous ne pouvez plus abandonner " + joueur.getNom());
+                        }
+                        
                         //joueur.perdreMise();
                         break;
                     case DOUBLER_SA_MISE:
@@ -107,7 +124,7 @@ public class Blackjack {
          
         // --- Tour du croupier ---
         boolean fin = false;
-        while (!fin && !croupier.detientBust()) {
+        while (croupierMustPlay && !fin && !croupier.detientBust()) {
             Action act = this.croupier.play(this.croupier);
             if (act == Action.DEMANDER_UNE_CARTE) {
                 this.croupier.choisirUneCarte();
@@ -132,47 +149,47 @@ public class Blackjack {
         int valeurCroupier = croupier.getScore();        
 
         for (Joueur joueur : joueurs) {
+            if(!joueur.getAbandon()){
+                int valeurJoueur = joueur.getScore();
 
-            int valeurJoueur = joueur.getScore();
+                if (joueur.detientBust()) {
+                    joueur.perdreMise();
+                    new VueInfo(gui, joueur.getNom() + " a perdu (BUST).");
+                } else if (croupier.detientBust()) {
+                    joueur.gagnerMise(2); // le croupier a perdu → le joueur gagne double
+                    if (joueur.detientBlackjack()) {
+                        joueur.gagnerMise(2.5f);
+                        new VueInfo(gui, joueur.getNom() + " à gagner par Blackjack.");
 
-            if (joueur.detientBust()) {
-                joueur.perdreMise();
-                new VueInfo(gui, joueur.getNom() + " a perdu (BUST).");
-                gui.setMiser(false);
-            } else if (croupier.detientBust()) {
-                joueur.gagnerMise(2); // le croupier a perdu → le joueur gagne double
-                if (joueur.detientBlackjack()) {
-                    new VueInfo(gui, joueur.getNom() + " à gagner par Blackjack.");
-                    gui.setMiser(false);
+                    } else {
+                        joueur.gagnerMise(2);
+                        new VueInfo(gui, joueur.getNom() + " à gagner.");
+
+                    }
+                } else if (joueur.detientBlackjack() && !croupier.detientBlackjack()) {
+                    joueur.gagnerMise(2.5f); 
+                    new VueInfo(gui, joueur.getNom() + " à gagner par Blackjack");
+
+                } else if (valeurJoueur > valeurCroupier) {
+                    joueur.gagnerMise(2);
+                    new VueInfo(gui, joueur.getNom() + " à gagner.");
+
+                } else if (valeurJoueur == valeurCroupier) {
+                    joueur.recupererMise(); // égalité → on rend la mise
+                    new VueInfo(gui, "Égalité.").setVisible(true);
 
                 } else {
-                    new VueInfo(gui, joueur.getNom() + " à ganger.").setVisible(true);
-                    gui.setMiser(false);
-
+                    this.croupier.getArgent().ajoutSomme(joueur.getMise().getMontant());
+                    joueur.perdreMise();
+                    new VueInfo(gui, joueur.getNom() + " perd contre le croupier.");
                 }
-            } else if (joueur.detientBlackjack() && !croupier.detientBlackjack()) {
-                joueur.gagnerMise(2.5f); // Blackjack payé 3:2
-                new VueInfo(gui, joueur.getNom() + " à gagner par Blackjack");
-                gui.setMiser(false);
-
-            } else if (valeurJoueur > valeurCroupier) {
-                joueur.gagnerMise(2);
-                new VueInfo(gui, joueur.getNom() + " à gagner.");
-                gui.setMiser(false);
-
-            } else if (valeurJoueur == valeurCroupier) {
-                joueur.recupererMise(); // égalité → on rend la mise
-                new VueInfo(gui, "Égalité.").setVisible(true);
-                gui.setMiser(false);
-
-            } else {
-                this.croupier.getArgent().ajoutSomme(joueur.getMise().getMontant());
-                joueur.perdreMise();
-                new VueInfo(gui, joueur.getNom() + " perd contre le croupier.");
-                gui.setMiser(false);
-
+            }else{
+                joueur.setAbandon(false);
+                System.out.println("R dans le jeu");
             }
         }
+        gui.setMiser(false);
+
     }
 
     public void melanger(){

@@ -15,12 +15,12 @@ public class MainClass {
     Croupier croupier = new Croupier("Alex",pocheCache);
 
   
-    Joueur j1 = new Joueur("Zade", new Paquet(), new JoueurIA(), new Argent(0f), new Argent(10000f));
-    Joueur j2 = new Joueur("IA", new Paquet(), new JoueurIA(), new Argent(0f), new Argent(10000f));
+    Joueur j1 = new Joueur("Zade", new Paquet(), new Humain(), new Argent(0f), new Argent(10000f));
+    //Joueur j2 = new Joueur("IA", new Paquet(), new JoueurIA(), new Argent(0f), new Argent(10000f));
 
     ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
     joueurs.add(j1);
-    joueurs.add(j2);
+    //joueurs.add(j2);
 
     Blackjack blackjack = new Blackjack(croupier, joueurs);
 

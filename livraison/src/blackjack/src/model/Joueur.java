@@ -7,10 +7,12 @@ public class Joueur extends Acteur {
 
     private Argent mise;
     private Argent augmentermise = new Argent(0f);
+    private boolean abandon;
 
     public Joueur(String nom, Paquet main, Strategy strategie, Argent mise, Argent argent) {
         super(nom, main, argent, strategie);
         this.mise = mise;
+        this.abandon = false;
     }
 
     public boolean miser(float somme) {
@@ -52,5 +54,17 @@ public class Joueur extends Acteur {
 
     public void perdreMise() {
         this.mise.setArgent(0f);
+    }
+
+    public int getNbCarte(){
+        return this.main.getTaille();
+    }
+
+    public boolean getAbandon(){
+            return this.abandon;
+    }
+    
+    public void setAbandon(boolean abandon){
+        this.abandon = abandon;
     }
 }
