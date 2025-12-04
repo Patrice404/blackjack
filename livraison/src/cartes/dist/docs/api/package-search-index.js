@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html","k":"18"},{"l":"cartes.controleur"},{"l":"cartes.model"},{"l":"cartes.utils"},{"l":"cartes.vue"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html","k":"18"},{"l":"cartes.model"},{"l":"cartes.utils"},{"l":"cartes.vue"}];updateSearchResults();

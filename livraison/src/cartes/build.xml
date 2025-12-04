@@ -97,18 +97,20 @@
     </target>
   
     <!-- ==================== Javadoc Target ================================== -->
+    
     <target name="javadoc" depends="compile" description="Create Javadoc API documentation">
         <mkdir dir="${dist.home}/docs/api"/>
-		
-        <javadoc sourcepath="${src.home}"
-                 destdir="${dist.home}/docs/api"
-                 packagenames="*">
+        
+        <javadoc destdir="${dist.home}/docs/api" access="public" author="true" version="true">
+            <fileset dir="${src.home}">
+                <include name="**/*.java"/>
+            </fileset>
+            
             <classpath>
                 <path refid="compile.classpath"/>
             </classpath>
         </javadoc>
     </target>
-
     <!-- ==================== Run Target ================================== -->
     <target name="run" depends="dist">
         <java jar="${dist.home}/${app.fullname}.jar" fork="true" />

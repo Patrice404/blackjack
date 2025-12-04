@@ -12,21 +12,24 @@ public class MainClass {
 
     UnchangeableSettings.loadSettings();
     Paquet pocheCache = FactoryPaquet.createPaquet52Carte();
-    Croupier croupier = new Croupier("Alex",pocheCache);
+    Croupier croupier = new Croupier("Alex", pocheCache);
 
-  
     Joueur j1 = new Joueur("Zade", new Paquet(), new Humain(), new Argent(0f), new Argent(10000f));
-    //Joueur j2 = new Joueur("IA", new Paquet(), new JoueurIA(), new Argent(0f), new Argent(10000f));
+    // Joueur j2 = new Joueur("IA", new Paquet(), new JoueurIA(), new Argent(0f),
+    // new Argent(10000f));
 
     ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
     joueurs.add(j1);
-    //joueurs.add(j2);
+    // joueurs.add(j2);
 
-    Blackjack blackjack = new Blackjack(croupier, joueurs);
-
-    BlackjackGUI blackjackGUI = new BlackjackGUI(blackjack);
-    blackjackGUI.setVisible(true);
-   
+    try {
+      Blackjack blackjack = new Blackjack(croupier, joueurs);
+      BlackjackGUI blackjackGUI = new BlackjackGUI(blackjack);
+      blackjackGUI.setVisible(true);
+    } catch (Exception e) {
+      System.out.println("Erreur lors de la création du jeu de Blackjack : " + e.getMessage());
+      return;
+    }
 
   }
 
